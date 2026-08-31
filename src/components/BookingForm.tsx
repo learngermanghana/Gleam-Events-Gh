@@ -23,16 +23,17 @@ export default function BookingForm({ services, slots, defaultServiceId = '' }: 
   const [result, setResult] = useState<BookingResult | null>(null)
 
   const filteredSlots = useMemo(
-    () => slots.filter(slot => !serviceId || slot.serviceId === serviceId),
+    () => slots.filter(slot => serviceId && slot.serviceId === serviceId),
     [slots, serviceId],
   )
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    const formElement = event.currentTarget
     setLoading(true)
     setResult(null)
 
-    const form = new FormData(event.currentTarget)
+    const form = new FormData(formElement)
     const payload = Object.fromEntries(form.entries())
 
     try {
@@ -50,7 +51,8 @@ export default function BookingForm({ services, slots, defaultServiceId = '' }: 
       }
 
       setResult(data)
-      event.currentTarget.reset()
+      formElement.reset()
+      setServiceId('')
       setSlotId('')
     } catch (error) {
       setResult({ ok: false, message: error instanceof Error ? error.message : 'Could not submit your booking.' })
@@ -84,7 +86,7 @@ export default function BookingForm({ services, slots, defaultServiceId = '' }: 
           </select>
         </label>
 
-        {filteredSlots.length ? (
+        {serviceId && filteredSlots.length ? (
           <label className="form-full">
             <span>Available time / event</span>
             <select name="slotId" value={slotId} onChange={event => setSlotId(event.target.value)}>
@@ -100,7 +102,7 @@ export default function BookingForm({ services, slots, defaultServiceId = '' }: 
               })}
             </select>
           </label>
-        ) : (
+        ) : serviceId ? (
           <>
             <label>
               <span>Preferred date</span>
@@ -111,7 +113,7 @@ export default function BookingForm({ services, slots, defaultServiceId = '' }: 
               <input name="bookingTime" type="time" required />
             </label>
           </>
-        )}
+        ) : null}
 
         <label className="form-full">
           <span>Tell us about your event</span>
