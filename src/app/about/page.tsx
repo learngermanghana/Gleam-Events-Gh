@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { sedifexLinks } from '@/config/sedifex'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -24,16 +24,16 @@ export default function AboutPage() {
           clients can enjoy their celebration while the important details are being managed.
         </p>
         <p>
-          Services and appointments are managed through Sedifex, giving clients a straightforward
-          way to explore what is available and start planning with us.
+          Our website connects directly to Sedifex for live services, availability, bookings and
+          payment handoff, so clients can begin planning without leaving the Gleam experience.
         </p>
         <div className="hero-actions">
-          <a className="button button-primary" href={sedifexLinks.services} target="_blank" rel="noreferrer">
+          <Link className="button button-primary" href="/services">
             Explore Our Services
-          </a>
-          <a className="button button-secondary" href={sedifexLinks.appointments} target="_blank" rel="noreferrer">
+          </Link>
+          <Link className="button button-secondary" href="/book">
             Book an Appointment
-          </a>
+          </Link>
         </div>
       </section>
     </main>
